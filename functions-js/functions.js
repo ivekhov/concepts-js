@@ -118,3 +118,105 @@ const takeOldest = (users, count = 1) => {
 //   const sorted = _.sortBy(users, ({ birthday }) => Date.parse(birthday));
 //   return sorted.slice(0, count);
 // };
+
+// # 08 map function task
+
+const getChildren = (users) => {
+
+  const result = users.map(
+    (user) => user.children
+  );
+
+  return result.flat();
+};
+
+// BEGIN
+// const getChildren = (users) => {
+//   const childrenOfUsers = users.map(({ children }) => children);
+//   return childrenOfUsers.flat();
+// };
+
+// Alternative solution using flatMap
+// export default (users) => users.flatMap(({ children }) => children);
+// END
+
+// # 09 filter
+const getGirlFriends = (users) => {
+  const selected = users.map(({friends}) => friends);
+  return selected.flat().filter(({ gender }) => gender === 'female');
+};
+
+// #10 reduce
+const groupBy = (students, property) => {
+  const select = (acc, user) => {
+    if (!Object.hasOwn(acc, user[property])) {
+      acc[user[property]] = [];
+    }
+    acc[user[property]].push(user);
+    return acc;
+  };
+
+  return students.reduce(select, {});
+};
+
+// BEGIN
+const groupBy2 = (objects, key) => objects.reduce((acc, object) => {
+  // из каждого объекта берётся значение по ключу
+  const groupName = object[key];
+  // контейнером группы выступает массив
+  // Оператор нулевого слияния возвращает пустой массив, если в аккумуляторе ничего нет
+  const group = acc[groupName] ?? [];
+  // возвращается новый объект аккумулятора
+  // старый аккумулятор деструктурируется, для текущей группы записывается новый массив с данными
+  // квадратные скобки нужны, чтобы указать имя группы в качестве ключа
+  return { ...acc, [groupName]: group.concat(object) };
+}, {});
+
+// #11 
+const getFreeDomainsCount = (emails) => emails
+  .map((email) => {
+    const [, domain] = email.split('@');
+    return domain;
+  })
+  .filter((domain) => freeEmailDomains.includes(domain))
+  .reduce((acc, domain) => {
+    const count = get(acc, domain, 0) + 1;
+    return { ...acc, [domain]: count };
+  }, {});
+ 
+// # 12 Recursion
+const sequenceSum = (begin, end) => {
+  if (begin > end) return NaN;
+  if (begin === end ) return end;
+  return (begin + sequenceSum(begin + 1, end));
+}; 
+
+// # 11 recursion
+
+const smallestDivisor = (num) => {
+  // BEGIN (write your solution here)
+  if (num === 1) return 1;
+  const iter = (number, dividor) => {
+    if (number === dividor) return dividor;
+    if (number % dividor === 0) return dividor;
+    return iter(number, dividor + 1)
+  }
+  return iter(num, 2);
+  // END
+};
+
+const iter = (acc) => {
+  // We use 'num / 2' in the condition below, and not 'num'.
+  // This is a simple optimization: a number cannot be divided
+  // by a number larger than its half.
+  if (acc > num / 2) {
+    return num;
+  }
+  if (num % acc === 0) {
+    return acc;
+  }
+  return iter(acc + 1);
+};
+
+return iter(2);
+
