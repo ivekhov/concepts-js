@@ -88,7 +88,36 @@ getName.call(company2); // "Hexlet Plus"
 ```
 В этом и заключается весь секрет this. Это контекст, который JavaScript прокидывает автоматически в функцию, если она вызывается как метод. В этом случае можно точно сказать, к какому объекту она принадлежит.
 
------
+Функции, записанные внутрь свойств объектов, называют методами:
 
-https://ru.hexlet.io/courses/js-introduction-to-oop/lessons/bind/theory_unit
+```js
+const company = { name: 'Hexlet' };
+// Создание функции, которая сразу же присваивается свойству getName и становится методом
+company.getName = function() {
+  return 'Hexlet';
+};
 
+// Вызов метода
+company.getName(); // "Hexlet"
+
+
+
+// При создании объекта
+const obj = {
+  getName: function() {
+    return 'Hexlet'
+  },
+};
+
+// Через присваивание константы
+const company = { name: 'Hexlet' };
+
+function getHexlet() {
+  return 'Hexlet';
+};
+// Имя не принципиально
+company.getName = getHexlet;
+
+
+
+```
