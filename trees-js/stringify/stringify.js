@@ -1,6 +1,7 @@
 // https://ru.hexlet.io/challenges/js_trees_stringify_exercise
 
-// import { entries } from "lodash";
+import _ from "lodash";
+import * as Console from "console";
 
 // ключи и строковые значения должны быть без кавычек;
 // строчка (линия) в строке заканчивается самим значением, без запятой.
@@ -19,7 +20,9 @@
 // Число - количество повторов отступа ключа. Значение по умолчанию - 1.
 
 const data = { hello: 'world', is: true, number: 5, float: 1.25};
-const data2 = { hello: 'world', is: true, nested: { count: 5 } };
+
+
+
 const data3 = { nested: { count: 5 } };
 
 const data4 = {
@@ -47,52 +50,54 @@ const data4 = {
 // ToDo: accumulator
 
 const stringify = (value,  replacer = ' ', spacesCount = 1) => {
-  if (typeof value !== 'object') {
+  if (!_.isObject(value)) {
     return `${value}`
   };
-  // console.log(value);
-
   let result = '';
-
+  let multiplicator = 0; // 0
+  let temp = 1;
   const crawler = (item, accumulator) => {
+    multiplicator += 1;
     accumulator += '{\n';
     const entries = Object.entries(item);
-
-    console.log(entries);
-
     for (const [keyInternal, valueInternal] of entries) {
-      if (typeof valueInternal === 'object') {
-        // console.log(`!-${valueInternal}-!`);
-        crawler(valueInternal, accumulator);
-      }
-      accumulator += `${replacer.repeat(spacesCount)}${keyInternal}: ${valueInternal}\n`;
+      if (_.isObject(valueInternal)) {
+        if (valueInternal !== null ) {
+          accumulator += `${replacer.repeat(spacesCount * multiplicator)}${keyInternal}: ${crawler(valueInternal, '')}\n}`;
+          multiplicator += 1;
+          console.log(multiplicator);
+          // multiplicator -= 1;
+          return accumulator;
+        }
+      };
+      accumulator += `${replacer.repeat(spacesCount * multiplicator)}${keyInternal}: ${valueInternal}\n`;
     };
-    accumulator += '}';
+    multiplicator -= 1;
+    accumulator += `${replacer.repeat(spacesCount * multiplicator)}}`;
     return accumulator;
   }
   result += crawler(value, result);
   return result;
 };
 
-// console.log(
-//   stringify('hello'), // hello - значение приведено к строке, но не имеет кавычек
-//   stringify(true),    // true
-//   stringify(5),
-//   stringify(1.25)
-// );
+const data2 = {
+  hello: 'world',
+  is: true,
+  nested: {
+    count: 5
+  }
+};
+console.log(stringify(data4, '|-', 2));
 
-console.log(
-  stringify(data2),
-);
-console.log(
-  // stringify(data3),
-);
+// console.log(
+  // stringify(data4),
+// );
 
 // console.log(
 //   stringify(data3, '----', 4),
 // );
 
- 
+
 // stringify(data, '|-', 2);
 // Символ, переданный вторым аргументом повторяется столько раз, сколько указано третьим аргументом.
 // {
