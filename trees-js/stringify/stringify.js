@@ -49,61 +49,80 @@ const data4 = {
 
 // ToDo: accumulator
 
-const stringify = (value,  replacer = ' ', spacesCount = 1) => {
-  if (!_.isObject(value)) {
-    return `${value}`
-  };
-  let result = '';
-  let multiplicator = 0; // 0
-  let temp = 1;
-  const crawler = (item, accumulator) => {
-    multiplicator += 1;
-    accumulator += '{\n';
-    const entries = Object.entries(item);
-    for (const [keyInternal, valueInternal] of entries) {
-      if (_.isObject(valueInternal)) {
-        if (valueInternal !== null ) {
-          accumulator += `${replacer.repeat(spacesCount * multiplicator)}${keyInternal}: ${crawler(valueInternal, '')}\n}`;
-          multiplicator += 1;
-          console.log(multiplicator);
-          // multiplicator -= 1;
-          return accumulator;
-        }
-      };
-      accumulator += `${replacer.repeat(spacesCount * multiplicator)}${keyInternal}: ${valueInternal}\n`;
-    };
-    multiplicator -= 1;
-    accumulator += `${replacer.repeat(spacesCount * multiplicator)}}`;
-    return accumulator;
-  }
-  result += crawler(value, result);
-  return result;
+// const stringify = (value,  replacer = ' ', spacesCount = 2) => {
+//   if (!_.isObject(value)) {
+//     return `${value}`
+//   };
+//   let result = '';
+//   const crawler = (item, accumulator, depth) => {
+//     accumulator += '{\n';
+//     const entries = Object.entries(item);
+//     for (const [keyInternal, valueInternal] of entries) {
+//       if (_.isObject(valueInternal)) {
+//         if (valueInternal !== null ) {
+//           accumulator += `${replacer.repeat(spacesCount * depth)}${keyInternal}: ${crawler(
+//             valueInternal,
+//             "",
+//             depth + 1
+//           )}\n${replacer.repeat(spacesCount * (depth - 1))}}`;
+//           return accumulator;
+//         }
+//       };
+//       accumulator += `${replacer.repeat(spacesCount * depth)}${keyInternal}: ${valueInternal}\n`;
+//     };
+//     accumulator += `${replacer.repeat(spacesCount * (depth - 1))}}`;
+//     return accumulator;
+//   }
+//   result += crawler(value, result, 1);
+//   return result;
+// };
+
+// const data2 = {
+//   hello: 'world',
+//   is: true,
+//   nested: {
+//     count: 5
+//   }
+// };
+// console.log(stringify(data4));
+
+//-------
+
+// BEGIN
+// import _ from 'lodash';
+
+const stringify = (value, replacer = ' ', spacesCount = 1) => {
+
+  const iter = (currentValue, depth) => {
+    if (typeof currentValue !== 'object' || currentValue === null) {
+      return `${currentValue}`;
+    }
+    
+    const indentSize = depth * spacesCount;
+    const currentIndent = replacer.repeat(indentSize);
+    const bracketIndent = replacer.repeat(indentSize - spacesCount);
+
+    const lines = Object
+      .entries(currentValue)
+      .map(([key, val]) => 
+      `${currentIndent}${key}: ` +
+      `${iter(val, depth + 1)}`);    
+    // return [
+    //   '{',
+    //   ...lines,
+    //   `${bracketIndent}}`,
+    // ].join('\n');
+    return lines;
+
+  };  
+  return iter(value, 1);
 };
 
-const data2 = {
-  hello: 'world',
-  is: true,
-  nested: {
-    count: 5
-  }
-};
-console.log(stringify(data4, '|-', 2));
-
-// console.log(
-  // stringify(data4),
-// );
-
-// console.log(
-//   stringify(data3, '----', 4),
-// );
+export default stringify;
+// END
+//-------
 
 
-// stringify(data, '|-', 2);
-// Символ, переданный вторым аргументом повторяется столько раз, сколько указано третьим аргументом.
-// {
-// |-|-hello: world
-// |-|-is: true
-// |-|-nested: {
-// |-|-|-|-count: 5
-// |-|-}
-// }
+console.log(stringify(data4));
+
+
