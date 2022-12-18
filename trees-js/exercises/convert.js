@@ -1,58 +1,28 @@
-import _ from 'lodash';
-
-const convert = (data) => {
-  const result = {};
-
-  const crawler = (items, accumulator) => {
-    
-    // ...
-    for (const item of items) { 
-      if (!Array.isArray(item[1])) {
-        _.set(accumulator, [item[0]], item[1]);
-
-      } else {
-        // console.log(item[0]);
-        // console.log(item[1]);
-        crawler(item[1], accumulator[item[1]]);
-
-        // _.set(accumulator, 
-        //   item[0], 
-        //   crawler(
-        //     item[1],
-        //     accumulator[item]
-        //   )
-        // );
-
-
-
-        // crawler(
-        //   item[1], 
-        //   _.set(
-        //     accumulator, 
-        //     item[0],
-        //     item[1]
-        //   )
-        // );
-
-      }
-    }
-    
-    return accumulator;
-  };
+const convert = (items) => {
+  // accumulator
+  const accumulator = {};
   
-  crawler(data, result);
-  return result;
+  // crawler
+  const crawler = (nodes, storage) => {
+    nodes.reduce((acc, item) => {
+      if (!Array.isArray(item[1])) {
+        acc[item[0]] = item[1];
+      } else {
+        acc[item[0]] = {};
+        crawler(item[1], acc[item[0]]);
+      }
+      return acc;
+    }, storage);
+  };
+  crawler(items, accumulator);
+  return accumulator;
 };
 
-console.log(convert([
-  ['key', [
-            ['key2', 'anotherValue']
-          ]
-  ],
-  ['key2', 'value2']
-])); 
-// { key: { key2: 'anotherValue' }, key2: 'value2' }
 
-// console.log(convert([])); // 
-// console.log(convert([['key', 'value']])); // { key: 'value' }
-// console.log(convert([['key', 'value'], ['key2', 'value2']])); // { key: 'value', key2: 'value2' }
+/*
+const convert = (tree) => tree.reduce((acc, node) => {
+  const [key, value] = node;
+  const newValue = Array.isArray(value) ? convert(value) : value;
+  return { ...acc, [key]: newValue };
+}, {});
+*/
