@@ -1,5 +1,5 @@
 /*
-
+https://ru.hexlet.io/challenges/js_trees_map_filter_reduce_exercise
 ToDo FILTER function
 
 
