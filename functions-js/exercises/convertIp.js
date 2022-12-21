@@ -31,28 +31,48 @@ const ipToInt = (ip) => {
 
 const intToIp = (number) => {
   const temp = number.toString(16);
-  const res = [..._.chunk(temp, 2)];
+  const foo = temp.padStart(8, '0');
+  const res = [..._.chunk(foo, 2)];
   return res
-    .map((item) => item.join(''))
+    .map((item) => `${item.join('')}`)
     .map((item) => parseInt(item, 16))
     .map((item) => item.toString())
-    // .map((item) => item.padStart('0'))
     .join('.')
 };
 
 export { ipToInt, intToIp };
 
+
+
 console.log(
   
-  // ToDo
+  // ToDo - Fix
   intToIp(167801600), // '10.0.115.0'
   intToIp(0), // '0.0.0.0'
   intToIp(32), // '0.0.0.32'
   
-  
-  // ipToInt('10.0.115.0'), // 167801600
-  // ipToInt('128.32.10.1'), //214 958 33 61
-  // ipToInt('255.255.255.255'), // 4294967295
-
-
+  ipToInt('10.0.115.0'), // 167801600
+  ipToInt('128.32.10.1'), //214 958 33 61
+  ipToInt('255.255.255.255'), // 4294967295
 );
+
+/*
+// BEGIN
+export const ipToInt = (ip) => {
+  const ipInHex = ip
+    .split('.')
+    .map((octet) => Number(octet).toString(16).padStart(2, 0))
+    .join('');
+
+  return parseInt(ipInHex, 16);
+};
+
+export const intToIp = (int) => {
+  const ipInHex = int.toString(16).padStart(8, 0);
+
+  return chunk(ipInHex, 2)
+    .map((octet) => parseInt(octet.join(''), 16))
+    .join('.');
+};
+// END
+ */
