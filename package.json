@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@hexlet/immutable-fs-trees": "^0.7.1",
     "async": "^3.2.4"
   }
 }
