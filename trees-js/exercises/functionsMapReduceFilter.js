@@ -15,12 +15,14 @@ const tree = mkdir('/', [
         mkdir('TEST_CONF.d'),
       ]),
     ]),
+
     mkfile('hosts'),
     mkdir('OUTER_DIR', [
-       mkdir('OUTER_CONF.d'),
-	 mkdir('OUTER_CONF_ANOTHER.d'),
-    	 mkfile('FILE4'),
+      mkdir('OUTER_CONF.d'),
+	    mkdir('OUTER_CONF_ANOTHER.d'),
+    	mkfile('FILE4'),
     ]),
+
     mkfile('FILE2'),
     mkfile('FILE3'),
   ]);
@@ -28,31 +30,49 @@ const tree = mkdir('/', [
 
 const filter = (inner, tree) => {
 
-  const crawler = (innerFunc, item, acc) => {
-    if (!innerFunc(item)) {
-      return;
+  // // возврат нового дерева -- ? 
+  const newMetaTree = _.cloneDeep(getMeta(tree));
+  const newNameTree = getName(tree);
+  // const newTree = mkdir(newNameTree, filter(inner, tree.children), newMetaTree);
+  
+  // отбираем объект-ноду по условию передаваемой функции
+  if (inner(tree)) {
+
+    // заходим внутрь нужной ноды, получаем список листьев
+    const children = getChildren(tree);
+
+    // обрабатываем каждый из листьев, не используя функцию map(), т к делаем вид, что ее не сущ-т
+    for (const child of children) {
+
+      // если нода соответствует условию обора, то заходим в нее
+      if (inner(child)) {
+
+        // рекурсивный вызов основной функции, для получения доступа ко всем вложенным нодам, соотв-м условию отбора
+        // filter(inner, child);
+
+        // например, вызов имени ноды и ее типа для проверки для иллюстрации достижения последнего уровня 
+        // console.log(`name and type of child : ${child.name} ${child.type}`);
+
+        // Что дальше ? нужно собрать объект из этих нод в дерево ? 
+        // .... 
+        const newMeta = _.cloneDeep(getMeta(child));
+        const newName = getName(child);
+        const temp = mkdir(newName, filter(inner, child), newMeta);
+        
+        // в таком виде это список нод на одном уровне без иерархии дерева
+        // console.log(newTree);
+
+        // ? -- возврат не работает 
+        // return newTree;
+      }
     }
-	
-    const name = getName(item);
-    const newMeta = _.cloneDeep(getMeta(item));
-    const children = getChildren(item);
-
-    acc['name'] = name; 
-    acc['meta'] = newMeta;
-    acc['type'] = item.type;
-    acc['children'] = [];
-
-    // ToDo - ? 
-    const newChildren = children.map((child) => crawler(innerFunc, child, acc));
-    acc['children'].push(newChildren);
-
-    return acc;
   }
+  // -- ? 
+  // return newTree;
 
-  return crawler(inner, tree, {});
 };
 
-console.log(JSON.stringify(tree));
+// console.log(JSON.stringify(tree));
 console.log('---------------TEST------------------------------------');
 const res = filter((n) => isDirectory(n), tree);
 console.log(JSON.stringify(res));
@@ -83,6 +103,6 @@ const map = (inner, tree) => {
   
 };
 
-//const test = map(n => ({ ...n, name: getName(n).toUpperCase() }), tree);
-//console.log(JSON.stringify(test));
+// const test = map(n => ({ ...n, name: getName(n).toUpperCase() }), tree);
+// console.log(JSON.stringify(test));
 
