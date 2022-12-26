@@ -83,16 +83,14 @@ const dnaToRnaRecursive = (row) => {
   const inner = (arr) => {
     const item = arr.pop();
 
-    if (!nuclDna.includes(item)) {
-      // вот тут хочу настроить чтобы функция вообще отдавала только null, типа как будто break
-      // а в текущей версии null передается как часть строки
-      return null;
-    }
+    if (!nuclDna.includes(item)) return null;
 
     if (arr.length === 0 ) return dict[item];
     return `${inner(arr)}${dict[item]}`;
   };
-  return inner(items);
+  const result = inner(items);
+  return result.includes('null') ? null : result;
+
 }
 
 console.log(
