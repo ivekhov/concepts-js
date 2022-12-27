@@ -218,3 +218,22 @@ export const getDirectorySize = (dirpath, cb) => {
 
 // # 08 https://ru.hexlet.io/courses/js-asynchronous-programming/lessons/timers/theory_unit
 
+// Example: compare sizes of two files.  
+const compareFileSizes = (pathOne, pathTwo, cb) => {
+
+  stat(pathOne, (_err, dataOne) => {
+    stat(pathTwo, (_err, dataTwo) => {
+      let result = 0;
+      if (dataOne.size > dataTwo.size) {
+        result = 1;
+      } else if (dataOne.size < dataTwo.size) {
+        result = -1;
+      };
+      cb(null, result);
+    });
+  });
+};
+
+
+
+

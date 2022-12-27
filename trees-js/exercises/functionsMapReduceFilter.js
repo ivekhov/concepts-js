@@ -48,31 +48,16 @@ const filter = (inner, tree) => {
       if (inner(child)) {
 
         // рекурсивный вызов основной функции, для получения доступа ко всем вложенным нодам, соотв-м условию отбора
-        // filter(inner, child);
+        filter(inner, child);
 
         // например, вызов имени ноды и ее типа для проверки для иллюстрации достижения последнего уровня 
-        // console.log(`name and type of child : ${child.name} ${child.type}`);
-
-        // Что дальше ? нужно собрать объект из этих нод в дерево ? 
-        // .... 
-        const newMeta = _.cloneDeep(getMeta(child));
-        const newName = getName(child);
-        const temp = mkdir(newName, filter(inner, child), newMeta);
-        
-        // в таком виде это список нод на одном уровне без иерархии дерева
-        // console.log(newTree);
-
-        // ? -- возврат не работает 
-        // return newTree;
+        console.log(`name and type of child : ${child.name} ${child.type}`);  
       }
     }
-  }
-  // -- ? 
-  // return newTree;
-
+  };
 };
 
-// console.log(JSON.stringify(tree));
+console.log(JSON.stringify(tree));
 console.log('---------------TEST------------------------------------');
 const res = filter((n) => isDirectory(n), tree);
 console.log(JSON.stringify(res));
