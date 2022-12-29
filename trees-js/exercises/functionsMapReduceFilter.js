@@ -29,35 +29,31 @@ const tree = mkdir('/', [
 
 
 const filter = (inner, tree) => {
-
-  // // возврат нового дерева -- ? 
-  const newMetaTree = _.cloneDeep(getMeta(tree));
-  const newNameTree = getName(tree);
-  // const newTree = mkdir(newNameTree, filter(inner, tree.children), newMetaTree);
   
-  // отбираем объект-ноду по условию передаваемой функции
-  if (inner(tree)) {
+  const copyTree = _.cloneDeep(tree);
+  const isFiltered = inner(tree);
+  
+  if (!isFiltered) return null;
 
-    // заходим внутрь нужной ноды, получаем список листьев
-    const children = getChildren(tree);
+  if (!isDirectory(tree)) return copyTree;
+  
+  const children = getChildren(tree);
 
-    // обрабатываем каждый из листьев, не используя функцию map(), т к делаем вид, что ее не сущ-т
-    for (const child of children) {
+  for (const child of children) {
 
-      // если нода соответствует условию обора, то заходим в нее
-      if (inner(child)) {
+    filter(inner, child);
 
-        // рекурсивный вызов основной функции, для получения доступа ко всем вложенным нодам, соотв-м условию отбора
-        filter(inner, child);
+    const newMeta = _.cloneDeep(getMeta(child));
+    const newName = getName(child);
 
-        // например, вызов имени ноды и ее типа для проверки для иллюстрации достижения последнего уровня 
-        console.log(`name and type of child : ${child.name} ${child.type}`);  
-      }
-    }
-  };
-};
+    return mkdir(newName, newMeta);
+  
+  }  
+}
+  
 
-console.log(JSON.stringify(tree));
+
+//console.log(JSON.stringify(tree));
 console.log('---------------TEST------------------------------------');
 const res = filter((n) => isDirectory(n), tree);
 console.log(JSON.stringify(res));
