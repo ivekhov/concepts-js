@@ -3,6 +3,14 @@
 import _ from 'lodash';
 import { mkdir, mkfile, getName, isDirectory, getChildren, getMeta } from '@hexlet/immutable-fs-trees';
 
+const tree2 = mkdir('/', [
+//  mkdir('etc', [
+    mkdir('nginx'),
+    mkfile('FILE'),
+    mkdir('etx'),
+//  ]),
+]);
+
 const tree = mkdir('/', [
     mkdir('etc', [
       mkdir('nginx', [
@@ -29,35 +37,32 @@ const tree = mkdir('/', [
 
 
 const filter = (inner, tree) => {
-  
   const copyTree = _.cloneDeep(tree);
-  const isFiltered = inner(tree);
-  
+  const isFiltered = inner(copyTree);
+//  console.log(`${copyTree.name} ${isFiltered}`);
   if (!isFiltered) return null;
+  if (!inner(copyTree)) return copyTree;
 
-  if (!isDirectory(tree)) return copyTree;
+  if (inner(copyTree)) {
   
-  const children = getChildren(tree);
-
-  for (const child of children) {
-
-    filter(inner, child);
-
-    const newMeta = _.cloneDeep(getMeta(child));
-    const newName = getName(child);
-
-    return mkdir(newName, newMeta);
-  
-  }  
+    const children = getChildren(copyTree);
+    for (const child of children) {
+      // console.log(`${child.name}`);
+        filter(inner, child);
+      // console.log(child.type);
+        const newMeta = _.cloneDeep(getMeta(child));
+        const newName = getName(child);
+        const newDir =  mkdir(newName,  newMeta);
+        return newDir;
+  //      console.log(`${newDir}-----\n`);
+    }
+  }
 }
-  
 
-
-//console.log(JSON.stringify(tree));
+console.log(JSON.stringify(tree2));
 console.log('---------------TEST------------------------------------');
-const res = filter((n) => isDirectory(n), tree);
+const res = filter((n) => isDirectory(n), tree2);
 console.log(JSON.stringify(res));
-
 
 //----------------------------------
 
