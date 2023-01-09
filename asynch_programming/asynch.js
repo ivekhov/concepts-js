@@ -236,4 +236,99 @@ const compareFileSizes = (pathOne, pathTwo, cb) => {
 
 
 
+//----------
+//
+const compare = (path1, path2, callback) => {
+// const diff = (path1, path2, callback) => {
+  fs.readFile(path1, 'utf-8', (_err1, data1) => {
+    if (_err1) {
+      callback(_err1);
+      return;
+    }
+    fs.readFile(path2, 'utf-8', (_err2, data2) => {
+      if (_err2) {
+        callback(_err2);
+        return;
+      }
+      const cont1 = data1.trim().toString().split('\n');
+      const cont2 = data2.trim().toString().split('\n');
+      const result = [];
+      const len1 = cont1.length;
+      const len2 = cont2.length;
+      let cnt;
+      len1 >= len2 ? cnt = len1 : cnt = len2;
+      for (let i = 0; i < cnt; i += 1) {
+        if (cont1.at(i) !== cont2.at(i)) {
+          if (cont1.at(i) === undefined || (cont1.at(i) === '' && len1 === 1)) {
+            result.push([null, cont2.at(i)]);
+          } else if (cont2.at(i) === undefined || (cont2.at(i) === '' && len2 === 1)) {
+            result.push([cont1.at(i), null]);
+          }
+          else {
+            result.push([cont1.at(i), cont2.at(i)]);
+          }
+        };
+      }
+      callback(null, result);
+    });
+  });
+};
 
+/*
+   // BEGIN
+  const biggestFile = lines1.length > lines2.length ? lines1 : lines2;
+
+  return biggestFile.reduce((acc, line, index) => {
+    if (lines1[index] === lines2[index]) {
+      return acc;
+    }
+
+    return [...acc, [lines1[index], lines2[index]].map((x) => (x === undefined ? null : x))];
+  }, []);
+  // END
+
+/ BEGIN
+export default (path1, path2, callback) => {
+  fs.readFile(path1, (err, data1) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    fs.readFile(path2, (err2, data2) => {
+      if (err2) {
+        callback(err2);
+        return;
+      }
+
+      callback(null, compare(data1.toString(), data2.toString()));
+    });
+  });
+};
+// END
+ *
+ *
+ */
+
+/*
+// BEGIN
+const getTypeName = (stat) => (stat.isDirectory() ? 'directory' : 'file');
+
+export const getTypes = (filesPath) => {
+  // функция получает путь и аккумулятор из reduce, выполняет попытку получить stat,
+  // добавляет в аккумулятор строку или null и возвращает обновлённый аккумулятор
+  const processPath = (filepath, result) => fsp.stat(filepath)
+    .then((data) => [...result, getTypeName(data)])
+    .catch(() => [...result, null]);
+
+  const resultPromise = filesPath.reduce(
+    // promise - это аккумулятор, обёрнутый в промис, поэтому на нём вызывается then
+    // result - предыдущее значение аккумулятора
+    (promise, filepath) => promise.then((result) => processPath(filepath, result)),
+    Promise.resolve([]),
+  );
+  return resultPromise;
+};
+// END
+//
+// */
