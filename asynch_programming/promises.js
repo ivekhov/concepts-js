@@ -62,4 +62,20 @@ export const getDirectorySize = (dirpath) => {
 
 //
 
-
+// BEGIN
+const checker = async (initialLink) => {
+  // запрашиваем страницу по ссылке
+  const response = await axios.get(initialLink);
+  // извлекаем массив всех ссылок на странице
+  const links = extractLinks(response.data);
+  // функция, возвращающая ссылку, если запрос по ней оказался неудачным
+  // при удачном запросе она возвращает null
+  const request = (link) => axios.get(link).then(() => null).catch(() => link);
+  // Отправляем запросы ко всем ссылкам
+  const promises = links.map(request);
+  // Получаем массив, состоящий из битых ссылок и значений null
+  const results = await Promise.all(promises);
+  // отсеиваем null
+  return results.filter((result) => result !== null);
+};
+// END
