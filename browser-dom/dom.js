@@ -228,6 +228,15 @@ export default () => {
   // END
 };
 
+/*
+ToDo:
+1) использовать document.querySelector('.PART OF CLASS NAME') для поиска элементов
+2) для добавления тега document.createElement('NAME')
+3) для добавления класса .classList.add()
+4) для добавления внутри контейнера - метод .prepend
+5) для текстового блока - .textContent = 'CONTENT SOME'
+
+ */
 
 /*
 // BEGIN
