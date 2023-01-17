@@ -206,5 +206,25 @@ export default (document) => {
 
 */
 
+// button and click and it - add class 
+export default () => {
+  // BEGIN (write your solution here)
+  const button = document.getElementById('alert-generator');
+  let cnt = 0;
+  button.addEventListener('click', 
+    () =>  {  
+      // add  class:  document.add class with value
+      const item = document.body.getElementsByClassName('alerts m-5');
 
+      const newDiv = document.createElement("div");
+      newDiv.className = 'alert alert-primary'
+      cnt += 1;
+      const newContent = document.createTextNode(`Alert ${cnt}`);
+      newDiv.appendChild(newContent);
+
+      item[0].prepend(newDiv);
+    }
+  );
+  // END
+};
 
