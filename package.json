@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@hexlet/immutable-fs-trees": "^0.7.1",
-    "async": "^3.2.4"
+    "async": "^3.2.4",
+    "escape-goat": "^4.0.0"
   }
 }
